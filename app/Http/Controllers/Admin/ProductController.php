@@ -82,6 +82,7 @@ class ProductController extends Controller
                 'description' => 'nullable|string',
                 'price' => 'required|numeric|min:0',
                 'stock_quantity' => 'required|integer|min:0',
+                'is_featured' => 'boolean',  // ← ADDED THIS
             ]);
 
             $product = Product::create($validated);
@@ -164,6 +165,7 @@ class ProductController extends Controller
                 'description' => 'nullable|string',
                 'price' => 'sometimes|numeric|min:0',
                 'stock_quantity' => 'sometimes|integer|min:0',
+                'is_featured' => 'boolean',  // ← ADDED THIS
             ]);
 
             $product->update($validated);
