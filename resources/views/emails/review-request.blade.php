@@ -205,7 +205,7 @@
             </div>
             <span class="emoji">📝</span>
             <h1>We Value Your Feedback!</h1>
-            <div class="brand">MASTERPIECE BOUTIQUE</div>
+            <div class="brand">MASTERPIECE</div>
         </div>
 
         <!-- Body -->
@@ -261,7 +261,7 @@
                 <a href="https://www.tiktok.com/@masterpiece.gh_">TikTok</a> ·
                 <a href="https://www.snapchat.com/add/masterpiece.gh">Snapchat</a>
             </p>
-            <p>&copy; {{ date('Y') }} MASTERPIECE Boutique. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} MasterpieceGH. All rights reserved.</p>
         </div>
 
     </div>

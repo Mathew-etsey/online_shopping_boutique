@@ -150,7 +150,7 @@
 
         <div class="header">
             <h1>Order Status Update</h1>
-            <div class="brand">MASTERPIECE BOUTIQUE</div>
+            <div class="brand">MASTERPIECE </div>
         </div>
 
         <div class="body">
@@ -190,7 +190,7 @@
             <div class="next-box">
                 <p><strong>Next Steps:</strong></p>
                 @if($order->order_status == 'ready_for_pickup')
-                    <p>Your order is ready for pickup at our boutique. Please bring your ID and order confirmation.</p>
+                    <p>Your order is ready for pickup . Please bring your order ID and order confirmation.</p>
                 @elseif($order->order_status == 'completed')
                     <p>Your order has been completed. Thank you for shopping with MASTERPIECE!</p>
                 @elseif($order->order_status == 'cancelled')
@@ -209,7 +209,7 @@
                 <a href="https://www.instagram.com/masterpiecegh.official">Instagram</a> ·
                 <a href="https://www.tiktok.com/@masterpiece.gh_">TikTok</a>
             </p>
-            <p>&copy; {{ date('Y') }} MASTERPIECE Boutique. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} MasterpieceGH. All rights reserved.</p>
         </div>
 
     </div>

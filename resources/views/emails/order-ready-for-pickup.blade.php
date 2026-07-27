@@ -227,7 +227,7 @@
                 <img src="https://yourdomain.com/images/logo-gold.png" alt="MASTERPIECE" style="max-height:40px; width:auto;">
             </div>
             <h1>🎉 Your Order is Ready!</h1>
-            <div class="brand">MASTERPIECE BOUTIQUE</div>
+            <div class="brand">MASTERPIECE </div>
         </div>
 
         <!-- Body -->
@@ -245,7 +245,7 @@
             <!-- Pickup Details -->
             <div class="pickup-box">
                 <h4>📍 Pickup Information</h4>
-                <p><strong>Address:</strong> <span class="highlight">12 Osu Road, Accra, Ghana</span></p>
+                <p><strong>Address:</strong> <span class="highlight"> Accra, Ghana</span></p>
                 <p><strong>Hours:</strong> Monday - Saturday, 9:00 AM - 6:00 PM</p>
                 <p><strong>Phone:</strong> <span class="highlight">+233 24 412 3456</span></p>
                 <p><strong>What to bring:</strong> Your ID and order confirmation</p>
@@ -285,7 +285,7 @@
                 <a href="https://www.tiktok.com/@masterpiece.gh_">TikTok</a> ·
                 <a href="https://www.snapchat.com/add/masterpiece.gh">Snapchat</a>
             </p>
-            <p>&copy; {{ date('Y') }} MASTERPIECE Boutique. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} MasterpieceGH. All rights reserved.</p>
         </div>
 
     </div>
