@@ -5,12 +5,20 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\CloudinaryService;  // ← ADDED
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
+    protected $cloudinary;  // ← ADDED
+
+    public function __construct(CloudinaryService $cloudinary)  // ← ADDED
+    {
+        $this->cloudinary = $cloudinary;
+    }
+
     /**
      * Display a listing of the products.
      */
@@ -82,19 +90,30 @@ class ProductController extends Controller
                 'description' => 'nullable|string',
                 'price' => 'required|numeric|min:0',
                 'stock_quantity' => 'required|integer|min:0',
-                'is_featured' => 'boolean',  // ← ADDED THIS
+                'is_featured' => 'boolean',
             ]);
 
             $product = Product::create($validated);
 
-            // Handle image upload manually
+            // Handle image upload manually with Cloudinary support
             if ($request->hasFile('images')) {
                 $file = $request->file('images');
                 if ($file->isValid() && in_array($file->getMimeType(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp'])) {
-                    $path = $file->store('products', 'public');
-                    $product->images()->create([
-                        'image_url' => $path
-                    ]);
+                    
+                    // Check if we should use Cloudinary or local storage
+                    if ($this->shouldUseCloudinary()) {
+                        // Upload to Cloudinary
+                        $imageUrl = $this->cloudinary->upload($file, 'products');
+                        $product->images()->create([
+                            'image_url' => $imageUrl
+                        ]);
+                    } else {
+                        // Upload to local storage
+                        $path = $file->store('products', 'public');
+                        $product->images()->create([
+                            'image_url' => $path
+                        ]);
+                    }
                 }
             }
 
@@ -158,35 +177,40 @@ class ProductController extends Controller
                 ], 404);
             }
 
-            // Validate without image
             $validated = $request->validate([
                 'category_id' => 'sometimes|exists:categories,id',
                 'name' => 'sometimes|string|max:255',
                 'description' => 'nullable|string',
                 'price' => 'sometimes|numeric|min:0',
                 'stock_quantity' => 'sometimes|integer|min:0',
-                'is_featured' => 'boolean',  // ← ADDED THIS
+                'is_featured' => 'boolean',
             ]);
 
             $product->update($validated);
 
-            // Handle image upload manually
+            // Handle image upload manually with Cloudinary support
             if ($request->hasFile('images')) {
                 $file = $request->file('images');
                 
                 if ($file->isValid() && in_array($file->getMimeType(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp'])) {
-                    // Delete old images
+                    // Delete old images (works for both local and Cloudinary)
                     foreach ($product->images as $oldImage) {
-                        if (Storage::disk('public')->exists($oldImage->image_url)) {
-                            Storage::disk('public')->delete($oldImage->image_url);
-                        }
+                        $this->deleteImage($oldImage->image_url);
                         $oldImage->delete();
                     }
                     
-                    $path = $file->store('products', 'public');
-                    $product->images()->create([
-                        'image_url' => $path
-                    ]);
+                    // Upload new image
+                    if ($this->shouldUseCloudinary()) {
+                        $imageUrl = $this->cloudinary->upload($file, 'products');
+                        $product->images()->create([
+                            'image_url' => $imageUrl
+                        ]);
+                    } else {
+                        $path = $file->store('products', 'public');
+                        $product->images()->create([
+                            'image_url' => $path
+                        ]);
+                    }
                 } else {
                     return response()->json([
                         'success' => false,
@@ -233,10 +257,9 @@ class ProductController extends Controller
                 ], 404);
             }
 
+            // Delete images (works for both local and Cloudinary)
             foreach ($product->images as $image) {
-                if (Storage::disk('public')->exists($image->image_url)) {
-                    Storage::disk('public')->delete($image->image_url);
-                }
+                $this->deleteImage($image->image_url);
             }
 
             $product->delete();
@@ -252,6 +275,32 @@ class ProductController extends Controller
                 'success' => false,
                 'message' => 'Failed to delete product: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Check if we should use Cloudinary
+     */
+    protected function shouldUseCloudinary(): bool  // ← ADDED
+    {
+        return config('filesystems.default') === 'cloudinary' || 
+               env('FILESYSTEM_DISK') === 'cloudinary';
+    }
+
+    /**
+     * Delete an image (works for both local and Cloudinary)
+     */
+    protected function deleteImage(string $imageUrl): void  // ← ADDED
+    {
+        // Check if it's a Cloudinary URL
+        if (str_contains($imageUrl, 'cloudinary.com')) {
+            $publicId = $this->cloudinary->getPublicId($imageUrl);
+            $this->cloudinary->delete($publicId);
+        } else {
+            // Local storage
+            if (Storage::disk('public')->exists($imageUrl)) {
+                Storage::disk('public')->delete($imageUrl);
+            }
         }
     }
 }
