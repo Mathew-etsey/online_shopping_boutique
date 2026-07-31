@@ -106,6 +106,52 @@
             color: #B8923F;
         }
 
+        /* ===== ITEMS BOX - NEW ===== */
+        .items-box {
+            background: #f5f0e8;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 16px 0 20px;
+        }
+        .items-box h4 {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            color: #0B0B0C;
+            opacity: 0.4;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .items-box .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 14px;
+        }
+        .items-box .item .name {
+            font-weight: 500;
+        }
+        .items-box .item .name .variation {
+            font-size: 11px;
+            color: #B8923F;
+            font-weight: 400;
+            display: block;
+            margin-top: 2px;
+        }
+        .items-box .item .qty {
+            opacity: 0.5;
+        }
+        .items-box .total {
+            border-top: 1px solid rgba(0,0,0,0.06);
+            margin-top: 8px;
+            padding-top: 8px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+        }
+        .items-box .total .gold {
+            color: #B8923F;
+        }
+
         .next-box {
             background: #d1fae5;
             border-radius: 12px;
@@ -141,6 +187,7 @@
             .container { margin: 10px; }
             .body { padding: 20px; }
             .header { padding: 20px; }
+            .items-box .item { flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -150,7 +197,7 @@
 
         <div class="header">
             <h1>Order Status Update</h1>
-            <div class="brand">MASTERPIECE </div>
+            <div class="brand">MASTERPIECE</div>
         </div>
 
         <div class="body">
@@ -187,10 +234,33 @@
                 </div>
             </div>
 
+            <!-- ===== ITEMS WITH SIZE AND COLOR ===== -->
+            <div class="items-box">
+                <h4>Order Items</h4>
+                @foreach($order->items as $item)
+                <div class="item">
+                    <span class="name">
+                        {{ $item->product->name }}
+                        @if($item->size)
+                            <span class="variation">Size: {{ $item->size }}</span>
+                        @endif
+                        @if($item->color)
+                            <span class="variation">Color: {{ $item->color }}</span>
+                        @endif
+                    </span>
+                    <span class="qty">x{{ $item->quantity }}</span>
+                </div>
+                @endforeach
+                <div class="total">
+                    <span>Total</span>
+                    <span class="gold">GH₵ {{ number_format($order->total_amount, 2) }}</span>
+                </div>
+            </div>
+
             <div class="next-box">
                 <p><strong>Next Steps:</strong></p>
                 @if($order->order_status == 'ready_for_pickup')
-                    <p>Your order is ready for pickup . Please bring your order ID and order confirmation.</p>
+                    <p>Your order is ready for pickup. Please bring your order ID and order confirmation.</p>
                 @elseif($order->order_status == 'completed')
                     <p>Your order has been completed. Thank you for shopping with MASTERPIECE!</p>
                 @elseif($order->order_status == 'cancelled')

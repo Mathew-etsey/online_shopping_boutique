@@ -114,7 +114,7 @@
             font-weight: 500;
         }
 
-        /* Items List */
+        /* Items List - UPDATED with Size and Color */
         .items-box {
             background: #f5f0e8;
             border-radius: 12px;
@@ -137,6 +137,13 @@
         }
         .items-box .item .name {
             font-weight: 500;
+        }
+        .items-box .item .name .variation {
+            font-size: 11px;
+            color: #B8923F;
+            font-weight: 400;
+            display: block;
+            margin-top: 2px;
         }
         .items-box .item .qty {
             opacity: 0.5;
@@ -227,7 +234,7 @@
                 <img src="https://yourdomain.com/images/logo-gold.png" alt="MASTERPIECE" style="max-height:40px; width:auto;">
             </div>
             <h1>🎉 Your Order is Ready!</h1>
-            <div class="brand">MASTERPIECE </div>
+            <div class="brand">MASTERPIECE</div>
         </div>
 
         <!-- Body -->
@@ -245,7 +252,7 @@
             <!-- Pickup Details -->
             <div class="pickup-box">
                 <h4>📍 Pickup Information</h4>
-                <p><strong>Address:</strong> <span class="highlight"> Accra, Ghana</span></p>
+                <p><strong>Address:</strong> <span class="highlight">Accra, Ghana</span></p>
                 <p><strong>Hours:</strong> Monday - Saturday, 9:00 AM - 6:00 PM</p>
                 <p><strong>Phone:</strong> <span class="highlight">+233 24 412 3456</span></p>
                 <p><strong>What to bring:</strong> Your ID and order confirmation</p>
@@ -259,12 +266,20 @@
                 <p><strong>⚠️ Please note:</strong> Orders not picked up within 7 days will be cancelled.</p>
             </div>
 
-            <!-- Items -->
+            <!-- Items - UPDATED with Size and Color -->
             <div class="items-box">
                 <h4>Your Order</h4>
                 @foreach($order->items as $item)
                 <div class="item">
-                    <span class="name">{{ $item->product->name }}</span>
+                    <span class="name">
+                        {{ $item->product->name }}
+                        @if($item->size)
+                            <span class="variation">Size: {{ $item->size }}</span>
+                        @endif
+                        @if($item->color)
+                            <span class="variation">Color: {{ $item->color }}</span>
+                        @endif
+                    </span>
                     <span class="qty">x{{ $item->quantity }}</span>
                 </div>
                 @endforeach

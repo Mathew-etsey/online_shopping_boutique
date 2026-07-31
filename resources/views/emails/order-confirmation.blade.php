@@ -74,7 +74,7 @@
                                 Thank you for your order. We're excited to prepare your items!
                             </p>
 
-                            <!-- Order Summary Box (table-based rows, no flexbox) -->
+                            <!-- Order Summary Box -->
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EDE6D8; margin-bottom:20px;">
                                 <tr>
                                     <td style="padding:16px 20px 4px 20px; font-size:14px; color:#0B0B0C; opacity:0.5;">Order Number</td>
@@ -105,7 +105,7 @@
                                 </tr>
                             </table>
 
-                            <!-- Items Table -->
+                            <!-- Items Table - UPDATED with Size and Color -->
                             <div style="margin:0 0 4px 0; font-size:13px; color:#0B0B0C; opacity:0.4; text-transform:uppercase; letter-spacing:0.05em;">Items</div>
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px; margin-bottom:16px;">
                                 <tr>
@@ -115,7 +115,19 @@
                                 </tr>
                                 @foreach($order->items as $item)
                                 <tr>
-                                    <td style="padding:10px 0; border-bottom:1px solid rgba(0,0,0,0.04);">{{ $item->product->name }}</td>
+                                    <td style="padding:10px 0; border-bottom:1px solid rgba(0,0,0,0.04);">
+                                        {{ $item->product->name }}
+                                        @if($item->size)
+                                            <span style="font-size:11px; color:#B8923F; display:block; margin-top:2px;">
+                                                Size: {{ $item->size }}
+                                            </span>
+                                        @endif
+                                        @if($item->color)
+                                            <span style="font-size:11px; color:#B8923F; display:block; margin-top:2px;">
+                                                Color: {{ $item->color }}
+                                            </span>
+                                        @endif
+                                    </td>
                                     <td style="padding:10px 0; border-bottom:1px solid rgba(0,0,0,0.04);">{{ $item->quantity }}</td>
                                     <td align="right" style="padding:10px 0; border-bottom:1px solid rgba(0,0,0,0.04);">GH₵ {{ number_format($item->price, 2) }}</td>
                                 </tr>
