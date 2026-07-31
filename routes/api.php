@@ -35,7 +35,7 @@ Route::get('/public/categories', [CategoryController::class, 'index']);
 Route::get('/public/categories/{id}', [CategoryController::class, 'show']);
 Route::get('/public/reviews/product/{productId}', [ReviewController::class, 'productReviews']);
 
-// ✅ NEW: Featured and New Arrivals Routes for Homepage
+// Featured and New Arrivals Routes for Homepage
 Route::get('/public/featured', [ProductController::class, 'featured']);
 Route::get('/public/new-arrivals', [ProductController::class, 'newArrivals']);
 
@@ -62,6 +62,28 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
+    | Customer Routes (Authenticated Users - Both Customers & Admins)
+    |--------------------------------------------------------------------------
+    */
+    
+    Route::prefix('customer')->group(function () {
+        // Customer Order Routes
+        Route::get('/orders', [CustomerOrderController::class, 'index']);
+        Route::get('/orders/{id}', [CustomerOrderController::class, 'show']);
+        
+        // Customer Profile Routes
+        Route::put('/profile', [CustomerProfileController::class, 'update']);
+        Route::put('/password', [CustomerProfileController::class, 'changePassword']);
+        
+        // ===== WISHLIST ROUTES =====
+        Route::get('/wishlist', [WishlistController::class, 'index']);
+        Route::post('/wishlist/toggle', [WishlistController::class, 'toggle']);
+        Route::get('/wishlist/check', [WishlistController::class, 'check']);
+        Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy']);
+    });
+
+    /*
+    |--------------------------------------------------------------------------
     | Admin Routes (Admin Only)
     |--------------------------------------------------------------------------
     */
@@ -82,11 +104,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('orders/{id}/status', [OrderController::class, 'updateStatus']);
         Route::apiResource('orders', OrderController::class);
 
-        // Wishlist Management
-        Route::apiResource('wishlists', WishlistController::class);
-        Route::post('wishlists/toggle', [WishlistController::class, 'toggle']);
-        Route::post('wishlists/check', [WishlistController::class, 'check']);
-
         // Return Request Management
         Route::get('return-requests/statistics', [ReturnRequestController::class, 'statistics']);
         Route::post('return-requests/{id}/status', [ReturnRequestController::class, 'updateStatus']);
@@ -96,27 +113,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('reviews/statistics', [ReviewController::class, 'statistics']);
         Route::get('reviews/product/{productId}', [ReviewController::class, 'productReviews']);
         Route::apiResource('reviews', ReviewController::class);
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | Customer Routes (Customer Only)
-    |--------------------------------------------------------------------------
-    */
-    
-    Route::middleware('customer')->prefix('customer')->group(function () {
-        // Customer Order Routes (Authenticated users only)
-        Route::get('/orders', [CustomerOrderController::class, 'index']);
-        Route::get('/orders/{id}', [CustomerOrderController::class, 'show']);
-        
-        // Customer Profile Routes
-        Route::put('/profile', [CustomerProfileController::class, 'update']);
-        Route::put('/password', [CustomerProfileController::class, 'changePassword']);
-        
-        // Customer Wishlist Routes (can be added later)
-        // Route::get('/wishlist', [CustomerWishlistController::class, 'index']);
-        // Route::post('/wishlist', [CustomerWishlistController::class, 'store']);
-        // Route::delete('/wishlist/{id}', [CustomerWishlistController::class, 'destroy']);
     });
 });
 
@@ -134,7 +130,7 @@ Route::fallback(function () {
 });
 
 Route::get('/test-email', function () {
-    $order = \App\Models\Order::find(1); // Use any existing order ID
+    $order = \App\Models\Order::find(1);
     
     \Illuminate\Support\Facades\Mail::to('test@example.com')
         ->send(new \App\Mail\OrderConfirmationMail($order));

@@ -8,7 +8,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Payment;
 use App\Helpers\OrderHelper;
-use App\Jobs\SendOrderConfirmationJob;  // ← ADD THIS IMPORT
+use App\Jobs\SendOrderConfirmationJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -77,6 +77,8 @@ class CustomerOrderController extends Controller
                 'items.*.product_id' => 'required|exists:products,id',
                 'items.*.quantity' => 'required|integer|min:1',
                 'items.*.price' => 'required|numeric|min:0',
+                'items.*.size' => 'nullable|string|max:50',    // ← ADDED
+                'items.*.color' => 'nullable|string|max:50',   // ← ADDED
                 'delivery_method' => 'required|in:pickup,delivery,express',
                 'delivery_address' => 'nullable|string',
                 'delivery_zone' => 'nullable|string',
@@ -107,13 +109,11 @@ class CustomerOrderController extends Controller
                 'payment_status' => 'pending'
             ];
 
-            // ✅ FIX: Always save guest data if provided
             if (!empty($validated['user_id'])) {
                 $orderData['user_id'] = $validated['user_id'];
                 Log::info('User order:', ['user_id' => $validated['user_id']]);
             }
 
-            // ✅ FIX: Save guest data when provided
             if (!empty($validated['guest_name'])) {
                 $orderData['guest_name'] = $validated['guest_name'];
                 $orderData['guest_email'] = $validated['guest_email'] ?? 'guest@example.com';
@@ -124,7 +124,6 @@ class CustomerOrderController extends Controller
                 ]);
             }
 
-            // ✅ FIX: If neither user_id nor guest_name, set default guest
             if (empty($orderData['user_id']) && empty($orderData['guest_name'])) {
                 $orderData['guest_name'] = 'Guest';
                 $orderData['guest_email'] = 'guest@example.com';
@@ -134,12 +133,15 @@ class CustomerOrderController extends Controller
 
             $order = Order::create($orderData);
 
+            // ===== UPDATED: Save order items with size and color =====
             foreach ($validated['items'] as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item['product_id'],
                     'quantity' => $item['quantity'],
-                    'price' => $item['price']
+                    'price' => $item['price'],
+                    'size' => $item['size'] ?? null,    // ← ADDED
+                    'color' => $item['color'] ?? null,  // ← ADDED
                 ]);
 
                 $product = Product::find($item['product_id']);
@@ -160,7 +162,6 @@ class CustomerOrderController extends Controller
 
             Log::info('Order created successfully:', ['order_id' => $order->id]);
 
-            // ✅ SEND ORDER CONFIRMATION EMAIL
             SendOrderConfirmationJob::dispatch($order);
 
             return response()->json([
