@@ -233,7 +233,7 @@
             <div class="logo">
                 <img src="https://onlineshoppingboutique-production.up.railway.app/images/logos/logo-gold.png" alt="MASTERPIECE" style="max-height:40px; width:auto;">
             </div>
-            <h1>🎉 Your Order is Ready!</h1>
+            <h1> Your Order is Ready!</h1>
             <div class="brand">MASTERPIECE</div>
         </div>
 
