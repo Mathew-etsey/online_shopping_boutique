@@ -231,7 +231,7 @@
         <!-- Header -->
         <div class="header">
             <div class="logo">
-                <img src="https://yourdomain.com/images/logo-gold.png" alt="MASTERPIECE" style="max-height:40px; width:auto;">
+                <img src="https://www.masterpiecegh.com/images/logo-gold.png" alt="MASTERPIECE" style="max-height:40px; width:auto;">
             </div>
             <h1>🎉 Your Order is Ready!</h1>
             <div class="brand">MASTERPIECE</div>
