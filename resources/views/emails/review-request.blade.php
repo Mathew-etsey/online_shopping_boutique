@@ -201,7 +201,7 @@
         <!-- Header -->
         <div class="header">
             <div class="logo">
-                <img src="https://www.masterpiecegh.com/images/logo-gold.png" alt="MASTERPIECE" style="max-height:40px; width:auto;">
+                <img src="https://onlineshoppingboutique-production.up.railway.app/images/logos/logo-gold.png" alt="MASTERPIECE" style="max-height:40px; width:auto;">
             </div>
             <span class="emoji">📝</span>
             <h1>We Value Your Feedback!</h1>

@@ -53,7 +53,7 @@
                     <!-- Header -->
                     <tr>
                         <td class="header-cell" align="center" style="background:#0B0B0C; padding:30px 30px 24px 30px; border-bottom:2px solid #B8923F;">
-                            <img src="https://www.masterpiecegh.com/images/logos/logo-gold.png" alt="MASTERPIECE" width="120" style="max-height:40px; width:auto; margin:0 auto 10px auto;">
+                            <img src="https://onlineshoppingboutique-production.up.railway.app/images/logos/logo-gold.png" alt="MASTERPIECE" width="120" style="max-height:40px; width:auto; margin:0 auto 10px auto;">
                             <div style="color:#EDE6D8; font-size:20px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase;">
                                 Order Confirmation
                             </div>
